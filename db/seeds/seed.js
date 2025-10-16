@@ -10,8 +10,8 @@ const {
 async function seed({ topicData, userData, articleData, commentData }) {
   await db.query(`
     DROP TABLE IF EXISTS comments;
-    `),
-    await db.query(`
+    `);
+  await db.query(`
     DROP TABLE IF EXISTS articles;
     `);
   await Promise.all([
@@ -100,4 +100,5 @@ async function seed({ topicData, userData, articleData, commentData }) {
 
   await db.query(commentsSeedQuery);
 }
+
 module.exports = seed;

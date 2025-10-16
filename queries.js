@@ -1,6 +1,6 @@
 const db = require("./db/connection.js");
 
-const main = async () => {
+const quieries = async () => {
   let response = await db.query("SELECT * FROM users;");
   console.log(response.rows);
 
@@ -30,4 +30,4 @@ const main = async () => {
   db.end();
 };
 
-main();
+quieries();
