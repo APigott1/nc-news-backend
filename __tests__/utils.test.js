@@ -237,8 +237,6 @@ describe("formatComments()", () => {
       articleLookup[article.title] = index + 1;
     });
 
-    const formattedComments = formatComments(commentData, articleLookup);
-
     const expectedArticleLookup = {
       1: 9,
       2: 1,
@@ -259,6 +257,8 @@ describe("formatComments()", () => {
       17: 9,
       18: 1,
     };
+
+    const formattedComments = formatComments(commentData, articleLookup);
 
     formattedComments.forEach((formattedComment, index) => {
       const commentWithTimestamp = convertTimestampToDate(commentData[index]);
