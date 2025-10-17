@@ -6,6 +6,7 @@ const {
   formatArticles,
   formatComments,
 } = require("../db/seeds/utils");
+
 const {
   topicData,
   userData,

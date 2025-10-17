@@ -1,24 +1,37 @@
 # Getting Started
 
+## Prerequisites
+
+[Node.js](https://nodejs.org/en/download)  
+[PostgreSQL](https://www.postgresql.org/download/)
+
+## npm packages
+
+To install the npm dependencies run
+
+```
+npm install
+```
+
 ## .env files
 
 To be able to connect to the databases create the following files in the root directory of the repository:
 
 .env.development  
-containing
+with contents
 
 ```
 PGDATABASE=nc_news
 ```
 
 .env.test  
-containing
+with contents
 
 ```
 PGDATABASE=nc_news_test
 ```
 
-If it will not connect to the databases with the above .env files add the following to each:
+If you cannot connect to the databases with the above .env files, add the following to each:
 
 ```
 PGUSER=<username>
@@ -27,8 +40,10 @@ PGHOST=localhost
 PGPORT=5432
 ```
 
+note: your username and password need to match the .pgpass file made when setting up psql
+
 ## Database Schema
 
-![Schema:](assets/schema.png)  
+![Schema:](assets/schema.png)
 
 _(generated from: [dbdiagram.io](https://diagram.io))_
