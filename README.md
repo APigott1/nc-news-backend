@@ -42,6 +42,26 @@ PGPORT=5432
 
 note: your username and password need to match the .pgpass file made when setting up psql
 
+## Usage
+
+To initialise the databases:
+
+```
+npm run setup-dbs
+```
+
+To seed the test database:
+
+```
+npm run test-seed
+```
+
+To seed the dev database:
+
+```
+npm run seed-dev
+```
+
 ## Database Schema
 
 ![Schema:](assets/schema.png)
