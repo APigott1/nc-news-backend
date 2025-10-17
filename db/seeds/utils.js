@@ -5,6 +5,12 @@ function convertTimestampToDate({ created_at, ...otherProperties }) {
   return { created_at: new Date(created_at), ...otherProperties };
 }
 
+function createLookup(arr, key, value) {
+  const lookup = {};
+  arr.forEach((item) => (lookup[item[key]] = item[value]));
+  return lookup;
+}
+
 function formatTopics(topicData) {
   return topicData.map((topic) => [
     topic.slug,
@@ -52,6 +58,7 @@ function formatComments(commentData, articleData) {
 
 module.exports = {
   convertTimestampToDate,
+  createLookup,
   formatTopics,
   formatUsers,
   formatArticles,

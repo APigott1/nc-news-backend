@@ -1,5 +1,6 @@
 const {
   convertTimestampToDate,
+  createLookup,
   formatTopics,
   formatUsers,
   formatArticles,
@@ -45,6 +46,48 @@ describe("convertTimestampToDate", () => {
     const result = convertTimestampToDate(input);
     const expected = { key: "value" };
     expect(result).toEqual(expected);
+  });
+});
+
+describe("createLookup()", () => {
+  test("returns an empty object when input is empty", () => {
+    expect(createLookup([])).toEqual({});
+  });
+  test("returns an object with key-value pair when input is an array of 1 object", () => {
+    expect(
+      createLookup(
+        [{ name: "Alex", age: 18, nickname: "Pidge" }],
+        "name",
+        "age"
+      )
+    ).toEqual({ Alex: 18 });
+  });
+  test("returns an object with key-value pairs when input is an array of multiple objects", () => {
+    const input = [
+      { foodName: "bacon", category: "meat", rating: 7 },
+      { foodName: "bread", category: "carbs", rating: 9 },
+      { foodName: "gummy bears", category: "sweets", rating: 6 },
+    ];
+    const expectedOutput = { bacon: 7, bread: 9, "gummy bears": 6 };
+
+    const output = createLookup(input, "foodName", "rating");
+
+    expect(output).toEqual(expectedOutput);
+  });
+  test("doesn't mutate input array", () => {
+    const input = [
+      { foodName: "bacon", category: "meat", rating: 7 },
+      { foodName: "bread", category: "carbs", rating: 9 },
+      { foodName: "gummy bears", category: "sweets", rating: 6 },
+    ];
+
+    const inputCpy = input.map((item) => {
+      return { ...item };
+    });
+
+    createLookup(input, "foodName", "rating");
+
+    expect(inputCpy).toEqual(input);
   });
 });
 
