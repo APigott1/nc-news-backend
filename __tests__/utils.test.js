@@ -210,20 +210,35 @@ describe("formatArticles()", () => {
 
 describe("formatComments()", () => {
   test("returns an array", () => {
-    const formattedComments = formatComments(commentData, articleData);
+    const articleLookup = {};
+    articleData.forEach((article, index) => {
+      articleLookup[article.title] = index + 1;
+    });
+
+    const formattedComments = formatComments(commentData, articleLookup);
     expect(formattedComments).toBeInstanceOf(Array);
   });
   test("returns a nested array", () => {
-    const formattedComments = formatComments(commentData, articleData);
+    const articleLookup = {};
+    articleData.forEach((article, index) => {
+      articleLookup[article.title] = index + 1;
+    });
+
+    const formattedComments = formatComments(commentData, articleLookup);
     formattedComments.forEach((comment) => {
       expect(formattedComments).toBeInstanceOf(Array);
     });
     expect(formattedComments.length).toBeGreaterThan(0);
   });
   test("each item contains the article_id, body, votes, author and created_at in order", () => {
-    const formattedComments = formatComments(commentData, articleData);
+    const articleLookup = {};
+    articleData.forEach((article, index) => {
+      articleLookup[article.title] = index + 1;
+    });
 
-    const expectedArticleIdLookup = {
+    const formattedComments = formatComments(commentData, articleLookup);
+
+    const expectedArticleLookup = {
       1: 9,
       2: 1,
       3: 1,
@@ -246,7 +261,7 @@ describe("formatComments()", () => {
 
     formattedComments.forEach((formattedComment, index) => {
       const commentWithTimestamp = convertTimestampToDate(commentData[index]);
-      expect(formattedComment[0]).toBe(expectedArticleIdLookup[index + 1]);
+      expect(formattedComment[0]).toBe(expectedArticleLookup[index + 1]);
       expect(formattedComment[1]).toBe(commentWithTimestamp.body);
       expect(formattedComment[2]).toBe(commentWithTimestamp.votes);
       expect(formattedComment[3]).toBe(commentWithTimestamp.author);
@@ -254,20 +269,26 @@ describe("formatComments()", () => {
     });
   });
   test("returns a new array", () => {
-    expect(formatComments(commentData, articleData)).not.toBe(commentData);
-    expect(formatComments(commentData, articleData)).not.toBe(articleData);
+    const articleLookup = {};
+    articleData.forEach((article, index) => {
+      articleLookup[article.title] = index + 1;
+    });
+    expect(formatComments(commentData, articleLookup)).not.toBe(commentData);
+    expect(formatComments(commentData, articleLookup)).not.toBe(articleLookup);
   });
   test("does not mutate the input", () => {
+    const articleLookup = {};
+    articleData.forEach((article, index) => {
+      articleLookup[article.title] = index + 1;
+    });
+    const articleLookupCpy = { ...articleLookup };
     const commentDataCpy = commentData.map((comment) => {
       return { ...comment };
     });
-    const articleDataCpy = articleData.map((article) => {
-      return { ...article };
-    });
 
-    formatArticles(commentData, articleData);
+    formatArticles(commentData, articleLookup);
 
     expect(commentDataCpy).toEqual(commentData);
-    expect(articleDataCpy).toEqual(articleData);
+    expect(articleLookupCpy).toEqual(articleLookup);
   });
 });

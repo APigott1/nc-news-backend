@@ -1,6 +1,7 @@
 const { format } = require("node-pg-format");
 const db = require("../connection.js");
 const {
+  createLookup,
   formatTopics,
   formatUsers,
   formatArticles,
@@ -82,14 +83,17 @@ async function seed({ topicData, userData, articleData, commentData }) {
   const articlesSeedQuery = format(
     `
     INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url)
-    VALUES %L;
+    VALUES %L
+    RETURNING *;
     `,
     formattedArticles
   );
 
-  await db.query(articlesSeedQuery);
+  const { rows } = await db.query(articlesSeedQuery);
 
-  const formattedComments = formatComments(commentData, articleData);
+  const articleLookup = createLookup(rows, "title", "article_id");
+
+  const formattedComments = formatComments(commentData, articleLookup);
   const commentsSeedQuery = format(
     `
     INSERT INTO comments (article_id, body, votes, author, created_at)

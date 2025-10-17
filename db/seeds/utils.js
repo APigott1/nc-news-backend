@@ -38,16 +38,11 @@ function formatArticles(articleData) {
   });
 }
 
-function formatComments(commentData, articleData) {
-  const articleIdLookup = {};
-  articleData.forEach((article, index) => {
-    articleIdLookup[article.title] = index + 1;
-  });
-
+function formatComments(commentData, articleLookup) {
   return commentData.map((comment) => {
     const commentWithTimeStamp = convertTimestampToDate(comment);
     return [
-      articleIdLookup[commentWithTimeStamp.article_title],
+      articleLookup[commentWithTimeStamp.article_title],
       commentWithTimeStamp.body,
       commentWithTimeStamp.votes,
       commentWithTimeStamp.author,
