@@ -43,7 +43,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
       article_id SERIAL PRIMARY KEY,
       title VARCHAR NOT NULL,
       topic VARCHAR REFERENCES topics(slug),
-      author VARCHAR REFERENCES users(username) ON DELETE CASCADE,
+      author VARCHAR REFERENCES users(username) ON DELETE SET NULL,
       body TEXT NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       votes INT NOT NULL DEFAULT 0,
@@ -55,7 +55,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
       article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
       body TEXT NOT NULL,
       votes INT NOT NULL DEFAULT 0,
-      author VARCHAR REFERENCES users(username) ON DELETE CASCADE,
+      author VARCHAR REFERENCES users(username) ON DELETE SET NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`);
 
