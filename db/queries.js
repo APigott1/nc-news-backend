@@ -29,4 +29,5 @@ const quieries = async () => {
 
   db.end();
 };
+
 quieries();
