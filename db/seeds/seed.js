@@ -62,7 +62,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
   const topicsSeedQuery = format(
     `
       INSERT INTO topics (slug, description, img_url)
-      VALUES %L
+      VALUES %L;
       `,
     formattedTopics
   );
@@ -71,7 +71,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
   const usersSeedQuery = format(
     `
     INSERT INTO users (username, name, avatar_url)
-    VALUES %L
+    VALUES %L;
     `,
     formattedUsers
   );
@@ -82,7 +82,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
   const articlesSeedQuery = format(
     `
     INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url)
-    VALUES %L
+    VALUES %L;
     `,
     formattedArticles
   );
@@ -93,7 +93,7 @@ async function seed({ topicData, userData, articleData, commentData }) {
   const commentsSeedQuery = format(
     `
     INSERT INTO comments (article_id, body, votes, author, created_at)
-    VALUES %L
+    VALUES %L;
     `,
     formattedComments
   );

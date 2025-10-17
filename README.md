@@ -26,3 +26,9 @@ PGPASSWORD=<password>
 PGHOST=localhost
 PGPORT=5432
 ```
+
+## Database Schema
+
+![Schema:](assets/schema.png)  
+
+_(generated from: [dbdiagram.io](https://diagram.io))_
