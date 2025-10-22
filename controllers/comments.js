@@ -1,11 +1,11 @@
 const {
-  selectCommentFromArticleId,
+  selectCommentFromArticle,
   insertCommentOnArticle,
 } = require("../models/comments.js");
 
-const getCommentsFromArticleId = async (req, res) => {
+const getCommentsFromArticle = async (req, res) => {
   const { article_id } = req.params;
-  const rows = await selectCommentFromArticleId(article_id);
+  const rows = await selectCommentFromArticle(article_id);
   res.status(200).send({ comments: rows });
 };
 
@@ -16,4 +16,4 @@ const postCommentOnArticle = async (req, res) => {
   res.status(201).send({ comment: rows[0] });
 };
 
-module.exports = { getCommentsFromArticleId, postCommentOnArticle };
+module.exports = { getCommentsFromArticle, postCommentOnArticle };

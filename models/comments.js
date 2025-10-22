@@ -1,6 +1,6 @@
 const db = require("../db/connection.js");
 
-async function selectCommentFromArticleId(article_id) {
+async function selectCommentFromArticle(article_id) {
   const { rows } = await db.query(
     `
     SELECT * FROM comments
@@ -25,4 +25,4 @@ async function insertCommentOnArticle(article_id, username, comment_body) {
   return rows;
 }
 
-module.exports = { selectCommentFromArticleId, insertCommentOnArticle };
+module.exports = { selectCommentFromArticle, insertCommentOnArticle };

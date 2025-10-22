@@ -2,7 +2,7 @@ const express = require("express");
 const { getTopics } = require("./controllers/topics.js");
 const { getArticles, getArticleFromId } = require("./controllers/articles.js");
 const {
-  getCommentsFromArticleId,
+  getCommentsFromArticle,
   postCommentOnArticle,
 } = require("./controllers/comments.js");
 
@@ -16,7 +16,7 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleFromId);
 
-app.get("/api/articles/:article_id/comments", getCommentsFromArticleId);
+app.get("/api/articles/:article_id/comments", getCommentsFromArticle);
 
 app.post("/api/articles/:article_id/comments", postCommentOnArticle);
 
