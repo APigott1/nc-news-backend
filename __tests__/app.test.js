@@ -60,3 +60,22 @@ describe("GET /api/articles/:article_id", () => {
     expect(typeof article.article_img_url).toBe("string");
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: returns an object with an array of comments assigned to a key comments", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/2/comments")
+      .expect(200);
+    const { comments } = body;
+
+    comments.forEach((comment) => {
+      expect(Object.keys(comment).length).toBe(6);
+      expect(typeof comment.comment_id).toBe("number");
+      expect(typeof comment.votes).toBe("number");
+      expect(typeof comment.created_at).toBe("string");
+      expect(typeof comment.author).toBe("string");
+      expect(typeof comment.body).toBe("string");
+      expect(comment.article_id).toBe(2);
+    });
+  });
+});
