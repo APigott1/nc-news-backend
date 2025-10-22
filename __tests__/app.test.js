@@ -79,3 +79,25 @@ describe("GET /api/articles/:article_id/comments", () => {
     });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: returns an object with the added comment assigned to a key comment", async () => {
+    const newComment = {
+      username: "lurker",
+      comment_body: "just lurking dw:)",
+    };
+
+    const { body } = await request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201);
+    const { comment } = body;
+
+    expect(typeof comment.comment_id).toBe("number");
+    expect(comment.article_id).toBe(2);
+    expect(comment.body).toBe("just lurking dw:)");
+    expect(comment.votes).toBe(0);
+    expect(comment.author).toBe("lurker");
+    expect(typeof comment.created_at).toBe("string");
+  });
+});
