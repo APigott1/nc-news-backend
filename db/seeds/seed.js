@@ -9,36 +9,51 @@ const {
 } = require("./utils.js");
 
 async function seed({ topicData, userData, articleData, commentData }) {
-  await db.query(`
+  await db.query(
+    `
     DROP TABLE IF EXISTS comments;
-    `);
-  await db.query(`
+    `
+  );
+  await db.query(
+    `
     DROP TABLE IF EXISTS articles;
-    `);
+    `
+  );
   await Promise.all([
-    db.query(`
-    DROP TABLE IF EXISTS users;
-    `),
-    db.query(`
-    DROP TABLE IF EXISTS topics;
-    `),
+    db.query(
+      `
+      DROP TABLE IF EXISTS users;
+      `
+    ),
+    db.query(
+      `
+      DROP TABLE IF EXISTS topics;
+      `
+    ),
   ]);
 
   await Promise.all([
-    db.query(`
-    CREATE TABLE topics (
-      slug VARCHAR PRIMARY KEY,
-      description VARCHAR NOT NULL,
-      img_url VARCHAR(1000)
-    );`),
-    db.query(`
-    CREATE TABLE users (
-      username VARCHAR PRIMARY KEY,
-      name VARCHAR,
-      avatar_url VARCHAR(1000)
-    );`),
+    db.query(
+      `
+      CREATE TABLE topics (
+        slug VARCHAR PRIMARY KEY,
+        description VARCHAR NOT NULL,
+        img_url VARCHAR(1000)
+      );
+      `
+    ),
+    db.query(
+      `
+      CREATE TABLE users (
+        username VARCHAR PRIMARY KEY,
+        name VARCHAR,
+        avatar_url VARCHAR(1000)
+      );
+      `
+    ),
   ]);
-  await db.query(`
+  await db.query(
+    `
     CREATE TABLE articles (
       article_id SERIAL PRIMARY KEY,
       title VARCHAR NOT NULL,
@@ -48,8 +63,11 @@ async function seed({ topicData, userData, articleData, commentData }) {
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       votes INT NOT NULL DEFAULT 0,
       article_img_url VARCHAR(1000)
-    );`);
-  await db.query(`
+    );
+    `
+  );
+  await db.query(
+    `
     CREATE TABLE comments (
       comment_id SERIAL PRIMARY KEY,
       article_id INT NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
@@ -57,14 +75,16 @@ async function seed({ topicData, userData, articleData, commentData }) {
       votes INT NOT NULL DEFAULT 0,
       author VARCHAR REFERENCES users(username) ON DELETE SET NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );`);
+    );
+    `
+  );
 
   const formattedTopics = formatTopics(topicData);
   const topicsSeedQuery = format(
     `
-      INSERT INTO topics (slug, description, img_url)
-      VALUES %L;
-      `,
+    INSERT INTO topics (slug, description, img_url)
+    VALUES %L;
+    `,
     formattedTopics
   );
 

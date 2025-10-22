@@ -30,4 +30,15 @@ async function selectArticles() {
   return rows;
 }
 
-module.exports = { selectArticles };
+async function selectArticleFromId(id) {
+  const { rows } = await db.query(
+    `
+    SELECT * FROM articles
+    WHERE article_id = $1;
+    `,
+    [id]
+  );
+  return rows;
+}
+
+module.exports = { selectArticles, selectArticleFromId };
