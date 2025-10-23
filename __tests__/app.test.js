@@ -109,7 +109,12 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200);
     const { comments } = body;
 
-    comments.forEach((comment) => {
+    comments.forEach((comment, index, comments) => {
+      if (index >= 1) {
+        const previousCommentDate = Date.parse(comments[index - 1].created_at);
+        const currentCommentDate = Date.parse(comment.created_at);
+        expect(previousCommentDate).toBeGreaterThanOrEqual(currentCommentDate);
+      }
       expect(Object.keys(comment).length).toBe(6);
       expect(typeof comment.comment_id).toBe("number");
       expect(typeof comment.votes).toBe("number");
