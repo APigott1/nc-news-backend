@@ -1,6 +1,8 @@
+const { patch } = require("../app.js");
 const {
   selectArticles,
   selectArticleFromId,
+  updateArticleWithVotesFromId,
 } = require("../models/articles.js");
 
 const getArticles = async (req, res) => {
@@ -14,4 +16,11 @@ const getArticleFromId = async (req, res) => {
   res.status(200).send({ article: articleData });
 };
 
-module.exports = { getArticles, getArticleFromId };
+const patchArticleWithVotesFromId = async (req, res) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+  const articleData = await updateArticleWithVotesFromId(article_id, inc_votes);
+  res.status(200).send({ article: articleData });
+};
+
+module.exports = { getArticles, getArticleFromId, patchArticleWithVotesFromId };

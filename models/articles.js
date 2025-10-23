@@ -34,7 +34,7 @@ async function selectArticleFromId(id) {
   const { rows } = await db.query(
     `
     SELECT * FROM articles
-    WHERE article_id = $1;
+      WHERE article_id = $1;
     `,
     [id]
   );
@@ -44,4 +44,21 @@ async function selectArticleFromId(id) {
   return rows[0];
 }
 
-module.exports = { selectArticles, selectArticleFromId };
+async function updateArticleWithVotesFromId(id, votes) {
+  const { rows } = await db.query(
+    `
+    UPDATE articles
+      SET votes = votes + $1
+        WHERE article_id = $2
+    RETURNING *;
+    `,
+    [votes, id]
+  );
+  return rows[0];
+}
+
+module.exports = {
+  selectArticles,
+  selectArticleFromId,
+  updateArticleWithVotesFromId,
+};

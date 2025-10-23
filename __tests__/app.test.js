@@ -22,7 +22,7 @@ describe("All: *", () => {
 });
 
 describe("GET /api/topics", () => {
-  test("200: returns an object with an array of topics assigned to a key topics", async () => {
+  test("200: responds with an object with an array of topics assigned to a key topics", async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
     const { topics } = body;
 
@@ -35,7 +35,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("GET /api/users", () => {
-  test("200: returns an object with an array of users assigned to a key users", async () => {
+  test("200: responds with an object with an array of users assigned to a key users", async () => {
     const { body } = await request(app).get("/api/users").expect(200);
     const { users } = body;
 
@@ -48,7 +48,7 @@ describe("GET /api/users", () => {
 });
 
 describe("GET /api/articles", () => {
-  test("200: returns an object with an array of articles assigned to a key articles", async () => {
+  test("200: responds with an object with an array of articles assigned to a key articles", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     const { articles } = body;
 
@@ -67,7 +67,7 @@ describe("GET /api/articles", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-  test("200: returns an object with an article assigned to a key article", async () => {
+  test("200: responds with an object with an article assigned to a key article", async () => {
     const { body } = await request(app).get("/api/articles/2").expect(200);
     const { article } = body;
 
@@ -98,7 +98,7 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-  test("200: returns an object with an array of comments assigned to a key comments", async () => {
+  test("200: responds with an object with an array of comments assigned to a key comments", async () => {
     const { body } = await request(app)
       .get("/api/articles/1/comments")
       .expect(200);
@@ -133,7 +133,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
-  test("201: returns an object with the added comment assigned to a key comment", async () => {
+  test("201: responds with an object with the added comment assigned to a key comment", async () => {
     const newComment = {
       username: "lurker",
       body: "just lurking dw:)",
@@ -177,5 +177,36 @@ describe("POST /api/articles/:article_id/comments", () => {
     const { msg } = body;
 
     expect(msg).toBe("Resource Not Found");
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: responds with the updated article assigned to a key article", async () => {
+    const votes = { inc_votes: 10 };
+    const { body } = await request(app)
+      .patch("/api/articles/2")
+      .send(votes)
+      .expect(200);
+    const { article } = body;
+
+    expect(Object.keys(article).length).toBe(8);
+    expect(typeof article.author).toBe("string");
+    expect(typeof article.title).toBe("string");
+    expect(article.article_id).toBe(2);
+    expect(typeof article.body).toBe("string");
+    expect(typeof article.topic).toBe("string");
+    expect(typeof article.created_at).toBe("string");
+    expect(article.votes).toBe(10);
+    expect(typeof article.article_img_url).toBe("string");
+  });
+  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
+    const votes = { inc_votes: 10 };
+    const { body } = await request(app)
+      .patch("/api/articles/not-an-id")
+      .send(votes)
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
   });
 });

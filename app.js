@@ -1,6 +1,10 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.js");
-const { getArticles, getArticleFromId } = require("./controllers/articles.js");
+const {
+  getArticles,
+  getArticleFromId,
+  patchArticleWithVotesFromId,
+} = require("./controllers/articles.js");
 const {
   getCommentsFromArticle,
   postCommentOnArticle,
@@ -28,6 +32,8 @@ app.get("/api/articles/:article_id", getArticleFromId);
 app.get("/api/articles/:article_id/comments", getCommentsFromArticle);
 
 app.post("/api/articles/:article_id/comments", postCommentOnArticle);
+
+app.patch("/api/articles/:article_id", patchArticleWithVotesFromId);
 
 app.use(handleMissingEndpointError);
 
