@@ -9,7 +9,14 @@ async function selectCommentsFromArticle(article_id) {
     `,
     [article_id]
   );
-  return rows;
+  if (rows.length === 0) {
+    throw {
+      status: 404,
+      msg: `No comments found for article_id: ${article_id}`,
+    };
+  } else {
+    return rows;
+  }
 }
 
 async function insertCommentOnArticle(article_id, username, body) {

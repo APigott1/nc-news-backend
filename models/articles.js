@@ -39,7 +39,7 @@ async function selectArticleFromId(id) {
     [id]
   );
   if (rows.length === 0) {
-    throw { status: 404, msg: "Resource Not Found" };
+    throw { status: 404, msg: `No article found for article_id: ${id}` };
   }
   return rows[0];
 }

@@ -93,14 +93,14 @@ describe("GET /api/articles/:article_id", () => {
     const { body } = await request(app).get("/api/articles/9999").expect(404);
     const { msg } = body;
 
-    expect(msg).toBe("Resource Not Found");
+    expect(msg).toBe("No article found for article_id: 9999");
   });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: returns an object with an array of comments assigned to a key comments", async () => {
     const { body } = await request(app)
-      .get("/api/articles/2/comments")
+      .get("/api/articles/1/comments")
       .expect(200);
     const { comments } = body;
 
@@ -111,8 +111,24 @@ describe("GET /api/articles/:article_id/comments", () => {
       expect(typeof comment.created_at).toBe("string");
       expect(typeof comment.author).toBe("string");
       expect(typeof comment.body).toBe("string");
-      expect(comment.article_id).toBe(2);
+      expect(comment.article_id).toBe(1);
     });
+  });
+  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/not-an-id/comments")
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
+  });
+  test("404: responds with an error message when no comments are found", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/9999/comments")
+      .expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("No comments found for article_id: 9999");
   });
 });
 
@@ -135,5 +151,31 @@ describe("POST /api/articles/:article_id/comments", () => {
     expect(comment.votes).toBe(0);
     expect(comment.author).toBe("lurker");
     expect(typeof comment.created_at).toBe("string");
+  });
+  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
+    const newComment = {
+      username: "lurker",
+      body: "just lurking dw:)",
+    };
+    const { body } = await request(app)
+      .post("/api/articles/not-an-id/comments")
+      .send(newComment)
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
+  });
+  test("404: responds with an error message when no article is found", async () => {
+    const newComment = {
+      username: "lurker",
+      body: "just lurking dw:)",
+    };
+    const { body } = await request(app)
+      .post("/api/articles/9999/comments")
+      .send(newComment)
+      .expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("Resource Not Found");
   });
 });

@@ -9,8 +9,8 @@ const getArticles = async (req, res) => {
 };
 
 const getArticleFromId = async (req, res) => {
-  const id = req.params.article_id;
-  const articleData = await selectArticleFromId(id);
+  const { article_id } = req.params;
+  const articleData = await selectArticleFromId(article_id);
   res.status(200).send({ article: articleData });
 };
 
