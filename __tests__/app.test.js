@@ -76,7 +76,7 @@ describe("GET /api/articles/:article_id", () => {
     const { body } = await request(app).get("/api/articles/2").expect(200);
     const { article } = body;
 
-    expect(Object.keys(article).length).toBe(8);
+    expect(Object.keys(article).length).toBe(9);
     expect(typeof article.author).toBe("string");
     expect(typeof article.title).toBe("string");
     expect(article.article_id).toBe(2);
@@ -85,6 +85,7 @@ describe("GET /api/articles/:article_id", () => {
     expect(typeof article.created_at).toBe("string");
     expect(typeof article.votes).toBe("number");
     expect(typeof article.article_img_url).toBe("string");
+    expect(typeof article.comment_count).toBe("number");
   });
   test("400: responds with an error message when a request is made with an invalid article_id", async () => {
     const { body } = await request(app)

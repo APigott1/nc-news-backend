@@ -14,13 +14,7 @@ async function selectArticles() {
     FROM articles
       LEFT JOIN comments
         ON articles.article_id = comments.article_id
-    GROUP BY articles.author,
-               title,
-               articles.article_id,
-               topic,
-               articles.created_at,
-               articles.votes,
-               article_img_url
+    GROUP BY articles.article_id
     ORDER BY articles.created_at DESC;
     `
   );
@@ -33,15 +27,22 @@ async function selectArticles() {
 async function selectArticleFromId(id) {
   const { rows } = await db.query(
     `
-    SELECT * FROM articles
-      WHERE article_id = $1;
+    SELECT articles.*,
+           COUNT(comments.comment_id) AS comment_count
+    FROM articles
+      LEFT JOIN comments
+        ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+    GROUP BY articles.article_id;
     `,
     [id]
   );
+  const article = rows[0];
   if (rows.length === 0) {
     throw { status: 404, msg: `No article found for article_id: ${id}` };
   }
-  return rows[0];
+  article.comment_count = Number(article.comment_count);
+  return article;
 }
 
 async function updateArticleWithVotesFromId(id, votes) {
