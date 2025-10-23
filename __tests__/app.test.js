@@ -125,6 +125,13 @@ describe("GET /api/articles/:article_id/comments", () => {
       expect(comment.article_id).toBe(1);
     });
   });
+  test("200: responds with an object with an empty array when the article has no comments", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/2/comments")
+      .expect(200);
+    const { comments } = body;
+    expect(comments).toEqual([]);
+  });
   test("400: responds with an error message when a request is made with an invalid article_id", async () => {
     const { body } = await request(app)
       .get("/api/articles/not-an-id/comments")
@@ -133,13 +140,13 @@ describe("GET /api/articles/:article_id/comments", () => {
 
     expect(msg).toBe("Invalid input");
   });
-  test("404: responds with an error message when no comments are found", async () => {
+  test("404: responds with an error message when no article is found", async () => {
     const { body } = await request(app)
       .get("/api/articles/9999/comments")
       .expect(404);
     const { msg } = body;
 
-    expect(msg).toBe("No comments found for article_id: 9999");
+    expect(msg).toBe("No article found for article_id: 9999");
   });
 });
 

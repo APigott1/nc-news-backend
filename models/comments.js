@@ -1,4 +1,5 @@
 const db = require("../db/connection.js");
+const { checkArticleExists } = require("./utils.js");
 
 async function selectCommentsFromArticle(article_id) {
   const { rows } = await db.query(
@@ -9,14 +10,8 @@ async function selectCommentsFromArticle(article_id) {
     `,
     [article_id]
   );
-  if (rows.length === 0) {
-    throw {
-      status: 404,
-      msg: `No comments found for article_id: ${article_id}`,
-    };
-  } else {
-    return rows;
-  }
+  await checkArticleExists(article_id);
+  return rows;
 }
 
 async function insertCommentOnArticle(article_id, username, body) {
@@ -32,16 +27,19 @@ async function insertCommentOnArticle(article_id, username, body) {
   return rows[0];
 }
 
-async function removeComment(id) {
+async function removeComment(comment_id) {
   const { rowCount } = await db.query(
     `
     DELETE from comments
       WHERE comment_id = $1;
     `,
-    [id]
+    [comment_id]
   );
   if (rowCount === 0) {
-    throw { status: 404, msg: `No comment found for comment_id: ${id}` };
+    throw {
+      status: 404,
+      msg: `No comment found for comment_id: ${comment_id}`,
+    };
   }
   return rowCount;
 }
