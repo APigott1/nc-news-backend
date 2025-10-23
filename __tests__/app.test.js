@@ -12,6 +12,15 @@ afterAll(async () => {
   await db.end();
 });
 
+describe("All: *", () => {
+  test("404: responds with an error message when a request is made to an undefined endpoint", async () => {
+    const { body } = await request(app).get("/not-an-endpoint").expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("Path Not Found");
+  });
+});
+
 describe("GET /api/topics", () => {
   test("200: returns an object with an array of topics assigned to a key topics", async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
@@ -84,7 +93,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   test("201: returns an object with the added comment assigned to a key comment", async () => {
     const newComment = {
       username: "lurker",
-      comment_body: "just lurking dw:)",
+      body: "just lurking dw:)",
     };
 
     const { body } = await request(app)
