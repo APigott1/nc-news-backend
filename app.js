@@ -6,7 +6,10 @@ const {
   postCommentOnArticle,
 } = require("./controllers/comments.js");
 const { getUsers } = require("./controllers/users.js");
-const { handleMissingEndpointError } = require("./controllers/errors.js");
+const {
+  handleMissingEndpointError,
+  handleDatabaseErrors,
+} = require("./controllers/errors.js");
 
 const app = express();
 
@@ -25,5 +28,7 @@ app.get("/api/articles/:article_id/comments", getCommentsFromArticle);
 app.post("/api/articles/:article_id/comments", postCommentOnArticle);
 
 app.use(handleMissingEndpointError);
+
+app.use(handleDatabaseErrors);
 
 module.exports = app;
