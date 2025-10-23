@@ -22,7 +22,7 @@ async function insertCommentOnArticle(article_id, username, body) {
     `,
     [article_id, body, username]
   );
-  return rows;
+  return rows[0];
 }
 
 module.exports = { selectCommentsFromArticle, insertCommentOnArticle };

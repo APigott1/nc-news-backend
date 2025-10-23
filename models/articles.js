@@ -38,7 +38,7 @@ async function selectArticleFromId(id) {
     `,
     [id]
   );
-  return rows;
+  return rows[0];
 }
 
 module.exports = { selectArticles, selectArticleFromId };
