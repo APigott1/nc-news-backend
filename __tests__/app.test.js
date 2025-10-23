@@ -52,7 +52,12 @@ describe("GET /api/articles", () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     const { articles } = body;
 
-    articles.forEach((article) => {
+    articles.forEach((article, index, articles) => {
+      if (index >= 1) {
+        const previousArticleDate = Date.parse(articles[index - 1].created_at);
+        const currentArticleDate = Date.parse(article.created_at);
+        expect(previousArticleDate).toBeGreaterThanOrEqual(currentArticleDate);
+      }
       expect(Object.keys(article).length).toBe(8);
       expect(typeof article.author).toBe("string");
       expect(typeof article.title).toBe("string");
@@ -165,6 +170,19 @@ describe("POST /api/articles/:article_id/comments", () => {
 
     expect(msg).toBe("Invalid input");
   });
+  test("400: responds with an error message when a request is made with a username that doesn't exist", async () => {
+    const newComment = {
+      username: "username_not_in_db",
+      body: "just lurking dw:)",
+    };
+    const { body } = await request(app)
+      .post("/api/articles/not-an-id/comments")
+      .send(newComment)
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
+  });
   test("404: responds with an error message when no article is found", async () => {
     const newComment = {
       username: "lurker",
@@ -182,9 +200,9 @@ describe("POST /api/articles/:article_id/comments", () => {
 
 describe("PATCH /api/articles/:article_id", () => {
   test("200: responds with the updated article assigned to a key article", async () => {
-    const votes = { inc_votes: 10 };
+    const votes = { inc_votes: -101 };
     const { body } = await request(app)
-      .patch("/api/articles/2")
+      .patch("/api/articles/1")
       .send(votes)
       .expect(200);
     const { article } = body;
@@ -192,11 +210,11 @@ describe("PATCH /api/articles/:article_id", () => {
     expect(Object.keys(article).length).toBe(8);
     expect(typeof article.author).toBe("string");
     expect(typeof article.title).toBe("string");
-    expect(article.article_id).toBe(2);
+    expect(article.article_id).toBe(1);
     expect(typeof article.body).toBe("string");
     expect(typeof article.topic).toBe("string");
     expect(typeof article.created_at).toBe("string");
-    expect(article.votes).toBe(10);
+    expect(article.votes).toBe(-1);
     expect(typeof article.article_img_url).toBe("string");
   });
   test("400: responds with an error message when a request is made with an invalid article_id", async () => {

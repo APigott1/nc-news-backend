@@ -4,7 +4,7 @@ const db = require("../connection.js");
 
 const runSeed = async () => {
   await seed(devData);
-  db.end();
+  await db.end();
 };
 
 runSeed();

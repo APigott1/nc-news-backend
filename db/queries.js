@@ -27,7 +27,7 @@ const quieries = async () => {
       WHERE votes > 10`);
   console.log(response.rows);
 
-  db.end();
+  await db.end();
 };
 
 quieries();
