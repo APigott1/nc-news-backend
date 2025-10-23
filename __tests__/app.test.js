@@ -81,6 +81,14 @@ describe("GET /api/articles/:article_id", () => {
     expect(typeof article.votes).toBe("number");
     expect(typeof article.article_img_url).toBe("string");
   });
+  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/not-an-id")
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
