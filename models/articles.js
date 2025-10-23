@@ -54,6 +54,9 @@ async function updateArticleWithVotesFromId(id, votes) {
     `,
     [votes, id]
   );
+  if (rows.length === 0) {
+    throw { status: 404, msg: `No article found for article_id: ${id}` };
+  }
   return rows[0];
 }
 

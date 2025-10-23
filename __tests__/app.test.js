@@ -175,18 +175,18 @@ describe("POST /api/articles/:article_id/comments", () => {
 
     expect(msg).toBe("Invalid input");
   });
-  test("400: responds with an error message when a request is made with a username that doesn't exist", async () => {
+  test("404: responds with an error message when a request is made with a username that doesn't exist", async () => {
     const newComment = {
       username: "username_not_in_db",
       body: "just lurking dw:)",
     };
     const { body } = await request(app)
-      .post("/api/articles/not-an-id/comments")
+      .post("/api/articles/2/comments")
       .send(newComment)
-      .expect(400);
+      .expect(404);
     const { msg } = body;
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Resource Not Found");
   });
   test("404: responds with an error message when no article is found", async () => {
     const newComment = {
@@ -231,5 +231,15 @@ describe("PATCH /api/articles/:article_id", () => {
     const { msg } = body;
 
     expect(msg).toBe("Invalid input");
+  });
+  test("404: responds with an error message when no article is found", async () => {
+    const votes = { inc_votes: 10 };
+    const { body } = await request(app)
+      .patch("/api/articles/9999")
+      .send(votes)
+      .expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("No article found for article_id: 9999");
   });
 });
