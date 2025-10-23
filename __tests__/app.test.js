@@ -34,6 +34,19 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/users", () => {
+  test("200: returns an object with an array of users assigned to a key users", async () => {
+    const { body } = await request(app).get("/api/users").expect(200);
+    const { users } = body;
+
+    users.forEach((user) => {
+      expect(typeof user.username).toBe("string");
+      expect(typeof user.name).toBe("string");
+      expect(typeof user.avatar_url).toBe("string");
+    });
+  });
+});
+
 describe("GET /api/articles", () => {
   test("200: returns an object with an array of articles assigned to a key articles", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
