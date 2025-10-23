@@ -32,4 +32,19 @@ async function insertCommentOnArticle(article_id, username, body) {
   return rows[0];
 }
 
-module.exports = { selectCommentsFromArticle, insertCommentOnArticle };
+async function removeComment(id) {
+  const { rowCount } = await db.query(
+    `
+    DELETE from comments
+      WHERE comment_id = $1;
+    `,
+    [id]
+  );
+  return rowCount;
+}
+
+module.exports = {
+  selectCommentsFromArticle,
+  insertCommentOnArticle,
+  removeComment,
+};

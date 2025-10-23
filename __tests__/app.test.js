@@ -243,3 +243,9 @@ describe("PATCH /api/articles/:article_id", () => {
     expect(msg).toBe("No article found for article_id: 9999");
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: responds with nothing", async () => {
+    await request(app).delete("/api/comments/1").expect(204);
+  });
+});

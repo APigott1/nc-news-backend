@@ -8,6 +8,7 @@ const {
 const {
   getCommentsFromArticle,
   postCommentOnArticle,
+  deleteComment,
 } = require("./controllers/comments.js");
 const { getUsers } = require("./controllers/users.js");
 const {
@@ -34,6 +35,8 @@ app.get("/api/articles/:article_id/comments", getCommentsFromArticle);
 app.post("/api/articles/:article_id/comments", postCommentOnArticle);
 
 app.patch("/api/articles/:article_id", patchArticleWithVotesFromId);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use(handleMissingEndpointError);
 
