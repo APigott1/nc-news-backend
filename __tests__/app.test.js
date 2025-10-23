@@ -89,6 +89,12 @@ describe("GET /api/articles/:article_id", () => {
 
     expect(msg).toBe("Invalid input");
   });
+  test("404: responds with an error message when no article is found", async () => {
+    const { body } = await request(app).get("/api/articles/9999").expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("Resource Not Found");
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {

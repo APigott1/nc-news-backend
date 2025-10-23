@@ -38,6 +38,9 @@ async function selectArticleFromId(id) {
     `,
     [id]
   );
+  if (rows.length === 0) {
+    throw { status: 404, msg: "Resource Not Found" };
+  }
   return rows[0];
 }
 
