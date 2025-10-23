@@ -40,6 +40,9 @@ async function removeComment(id) {
     `,
     [id]
   );
+  if (rowCount === 0) {
+    throw { status: 404, msg: `No comment found for comment_id: ${id}` };
+  }
   return rowCount;
 }
 

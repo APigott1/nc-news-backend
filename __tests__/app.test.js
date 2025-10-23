@@ -246,6 +246,24 @@ describe("PATCH /api/articles/:article_id", () => {
 
 describe("DELETE /api/comments/:comment_id", () => {
   test("204: responds with nothing", async () => {
-    await request(app).delete("/api/comments/1").expect(204);
+    const { body } = await request(app).delete("/api/comments/1").expect(204);
+    expect(body).toEqual({});
+  });
+  test("400: responds with an error message when a request is made with an invalid comment_id", async () => {
+    const { body } = await request(app)
+      .delete("/api/comments/not-an-id")
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid input");
+  });
+  test("404: responds with an error message when no comment is found", async () => {
+    const votes = { inc_votes: 10 };
+    const { body } = await request(app)
+      .delete("/api/comments/9999")
+      .expect(404);
+    const { msg } = body;
+
+    expect(msg).toBe("No comment found for comment_id: 9999");
   });
 });
