@@ -1,5 +1,4 @@
 const db = require("../db/connection.js");
-const { checkExists } = require("./utils.js");
 
 async function selectCommentsFromArticle(article_id) {
   const { rows } = await db.query(
@@ -10,7 +9,6 @@ async function selectCommentsFromArticle(article_id) {
     `,
     [article_id]
   );
-  await checkExists("articles", "article_id", article_id);
   return rows;
 }
 

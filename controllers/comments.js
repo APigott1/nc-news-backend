@@ -3,10 +3,15 @@ const {
   insertCommentOnArticle,
   removeComment,
 } = require("../models/comments.js");
+const { checkExists } = require("../models/utils.js");
 
 const getCommentsFromArticle = async (req, res) => {
   const { article_id } = req.params;
-  const commentsData = await selectCommentsFromArticle(article_id);
+  const promises = [selectCommentsFromArticle(article_id)];
+  if (article_id) {
+    promises.push(checkExists("articles", "article_id", article_id));
+  }
+  const [commentsData] = await Promise.all(promises);
   res.status(200).send({ comments: commentsData });
 };
 
