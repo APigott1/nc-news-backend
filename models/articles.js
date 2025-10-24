@@ -1,15 +1,16 @@
 const db = require("../db/connection.js");
 const { format } = require("node-pg-format");
 
-async function selectArticles(sort_by = "created_at", order = "DESC") {
+async function selectArticles(sort_by = "created_at", order = "DESC", topic) {
+  const queryValues = [];
   const allowedOrder = ["DESC", "ASC"];
   const orderInUpper = order.toUpperCase();
-  if (!allowedOrder.includes(orderInUpper))
-     {
+
+  if (!allowedOrder.includes(orderInUpper)) {
     throw { status: 400, msg: `Invalid order ${order}` };
   }
-  const queryStr = format(
-    `
+
+  let queryStr = `
     SELECT articles.author,
            title, 
            articles.article_id,
@@ -21,13 +22,23 @@ async function selectArticles(sort_by = "created_at", order = "DESC") {
     FROM articles
       LEFT JOIN comments
         ON articles.article_id = comments.article_id
+    `;
+
+  if (topic) {
+    queryStr += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += format(
+    `
     GROUP BY articles.article_id
     ORDER BY %I %s;
     `,
     sort_by,
     orderInUpper
   );
-  const { rows } = await db.query(queryStr);
+
+  const { rows } = await db.query(queryStr, queryValues);
   rows.forEach((article) => {
     article.comment_count = Number(article.comment_count);
   });

@@ -93,6 +93,24 @@ describe("GET /api/articles", () => {
       expect(typeof article.comment_count).toBe("number");
     });
   });
+  test("200: responds with an object with an array of articles of the queried topic", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200);
+    const { articles } = body;
+
+    articles.forEach((article) => {
+      expect(article.topic).toBe("cats");
+    });
+  });
+  test("200: responds with an object with an empty array when the topic exists but has no articles", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200);
+    const { articles } = body;
+
+    expect(articles).toEqual([]);
+  });
   test("400: responds with an error message when the sort_by query isn't a valid column", async () => {
     const { body } = await request(app)
       .get("/api/articles?sort_by=not-a-column&order=asc")
@@ -108,6 +126,13 @@ describe("GET /api/articles", () => {
     const { msg } = body;
 
     expect(msg).toBe("Invalid order not-an-order");
+  });
+  test("404: responds with an error message when the topic query is not found", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?topic=topic-not-in-db")
+      .expect(404);
+    const { msg } = body;
+    expect(msg).toBe("No topic found for slug: topic-not-in-db");
   });
 });
 

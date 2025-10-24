@@ -1,12 +1,18 @@
+const { sort } = require("../db/data/test-data/articles.js");
 const {
   selectArticles,
   selectArticleFromId,
   updateArticleWithVotesFromId,
 } = require("../models/articles.js");
+const { checkExists } = require("../models/utils.js");
 
 const getArticles = async (req, res) => {
-  const { sort_by, order } = req.query;
-  const articlesData = await selectArticles(sort_by, order);
+  const { sort_by, order, topic } = req.query;
+  const promises = [selectArticles(sort_by, order, topic)];
+  if (topic) {
+    promises.push(checkExists("topics", "slug", topic));
+  }
+  const [articlesData] = await Promise.all(promises);
   res.status(200).send({ articles: articlesData });
 };
 
