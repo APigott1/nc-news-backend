@@ -58,7 +58,7 @@ async function selectArticleFromId(id) {
     `,
     [id]
   );
-  const article = rows[0];
+  const [article] = rows;
   if (rows.length === 0) {
     throw { status: 404, msg: `No article found for article_id: ${id}` };
   }
@@ -76,10 +76,11 @@ async function updateArticleWithVotesFromId(id, votes) {
     `,
     [votes, id]
   );
+  const [article] = rows;
   if (rows.length === 0) {
     throw { status: 404, msg: `No article found for article_id: ${id}` };
   }
-  return rows[0];
+  return article;
 }
 
 module.exports = {

@@ -132,6 +132,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?topic=topic-not-in-db")
       .expect(404);
     const { msg } = body;
+
     expect(msg).toBe("No topic found for slug: topic-not-in-db");
   });
 });
@@ -320,6 +321,7 @@ describe("PATCH /api/articles/:article_id", () => {
 describe("DELETE /api/comments/:comment_id", () => {
   test("204: responds with nothing", async () => {
     const { body } = await request(app).delete("/api/comments/1").expect(204);
+
     expect(body).toEqual({});
   });
   test("400: responds with an error message when a request is made with an invalid comment_id", async () => {
