@@ -5,13 +5,13 @@ const handleMissingEndpoint = (req, res) => {
 const handleDatabaseErrors = (err, req, res, next) => {
   switch (err.code) {
     case "22P02":
-      res.status(400).send({ msg: "Invalid input" });
+      res.status(400).send({ msg: "Invalid Input" });
       break;
     case "23503":
       res.status(404).send({ msg: "Resource Not Found" });
       break;
     case "42703":
-      res.status(400).send({ msg: "Invalid column name" });
+      res.status(400).send({ msg: "Invalid Column Name" });
       break;
     default:
       next(err);

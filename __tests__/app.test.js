@@ -121,7 +121,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?sort_by=not-a-column&order=asc")
       .expect(400);
 
-    expect(msg).toBe("Invalid column name");
+    expect(msg).toBe("Invalid Column Name");
   });
   test("400: responds with an error message when the order query is neither asc or desc", async () => {
     const {
@@ -165,7 +165,7 @@ describe("GET /api/articles/:article_id", () => {
       body: { msg },
     } = await request(app).get("/api/articles/not-an-id").expect(400);
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Invalid Input");
   });
   test("404: responds with an error message when no article is found", async () => {
     const {
@@ -202,7 +202,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(votes)
       .expect(400);
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Invalid Input");
   });
   test("404: responds with an error message when no article is found", async () => {
     const votes = { inc_votes: 10 };
@@ -246,7 +246,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       body: { msg },
     } = await request(app).get("/api/articles/not-an-id/comments").expect(400);
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Invalid Input");
   });
   test("404: responds with an error message when no article is found", async () => {
     const {
@@ -290,7 +290,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(400);
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Invalid Input");
   });
   test("404: responds with an error message when a request is made with a username that doesn't exist", async () => {
     const newComment = {
@@ -333,7 +333,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       body: { msg },
     } = await request(app).delete("/api/comments/not-an-id").expect(400);
 
-    expect(msg).toBe("Invalid input");
+    expect(msg).toBe("Invalid Input");
   });
   test("404: responds with an error message when no comment is found", async () => {
     const votes = { inc_votes: 10 };
