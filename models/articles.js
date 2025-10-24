@@ -1,7 +1,7 @@
 const db = require("../db/connection.js");
 const { format } = require("node-pg-format");
 
-async function selectArticles(sort_by = "created_at", order = "DESC", topic) {
+async function selectArticles({sort_by = "created_at", order = "DESC", topic}) {
   const queryValues = [];
   const allowedOrder = ["DESC", "ASC"];
   const orderInUpper = order.toUpperCase();

@@ -1,46 +1,19 @@
 const express = require("express");
-const { getTopics } = require("./controllers/topics.js");
 const {
-  getArticles,
-  getArticleFromId,
-  patchArticleWithVotesFromId,
-} = require("./controllers/articles.js");
-const {
-  getCommentsFromArticle,
-  postCommentOnArticle,
-  deleteComment,
-} = require("./controllers/comments.js");
-const { getUsers } = require("./controllers/users.js");
-const {
-  handleMissingEndpointError,
+  handleMissingEndpoint,
   handleDatabaseErrors,
   handleCustomErrors,
   handleServerErrors,
 } = require("./controllers/errors.js");
+const apiRouter = require("./routes/apiRouter.js");
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/api/topics", getTopics);
+app.use("/api", apiRouter);
 
-app.get("/api/articles", getArticles);
-
-app.get("/api/users", getUsers);
-
-app
-  .route("/api/articles/:article_id")
-  .get(getArticleFromId)
-  .patch(patchArticleWithVotesFromId);
-
-app
-  .route("/api/articles/:article_id/comments")
-  .get(getCommentsFromArticle)
-  .post(postCommentOnArticle);
-
-app.delete("/api/comments/:comment_id", deleteComment);
-
-app.use(handleMissingEndpointError);
+app.use(handleMissingEndpoint);
 
 app.use(handleDatabaseErrors);
 
