@@ -69,6 +69,46 @@ describe("GET /api/articles", () => {
       expect(typeof article.comment_count).toBe("number");
     });
   });
+  test("200: responds with an object with an array of articles sorted and ordered by queries", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?sort_by=comment_count&order=asc")
+      .expect(200);
+    const { articles } = body;
+
+    articles.forEach((article, index, articles) => {
+      if (index >= 1) {
+        const previousArticleCommentCount = articles[index - 1].votes;
+        const currentArticleCommentCount = article.votes;
+        expect(previousArticleCommentCount).toBeLessThanOrEqual(
+          currentArticleCommentCount
+        );
+      }
+      expect(typeof article.author).toBe("string");
+      expect(typeof article.title).toBe("string");
+      expect(typeof article.article_id).toBe("number");
+      expect(typeof article.topic).toBe("string");
+      expect(typeof article.created_at).toBe("string");
+      expect(typeof article.votes).toBe("number");
+      expect(typeof article.article_img_url).toBe("string");
+      expect(typeof article.comment_count).toBe("number");
+    });
+  });
+  test("400: responds with an error message when the sort_by query isn't a valid column", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?sort_by=not-a-column&order=asc")
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid column name");
+  });
+  test("400: responds with an error message when the order query is neither asc or desc", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?sort_by=comment_count&order=not-an-order")
+      .expect(400);
+    const { msg } = body;
+
+    expect(msg).toBe("Invalid order not-an-order");
+  });
 });
 
 describe("GET /api/articles/:article_id", () => {

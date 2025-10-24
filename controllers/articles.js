@@ -5,7 +5,8 @@ const {
 } = require("../models/articles.js");
 
 const getArticles = async (req, res) => {
-  const articlesData = await selectArticles();
+  const { sort_by, order } = req.query;
+  const articlesData = await selectArticles(sort_by, order);
   res.status(200).send({ articles: articlesData });
 };
 

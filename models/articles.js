@@ -1,7 +1,14 @@
 const db = require("../db/connection.js");
+const { format } = require("node-pg-format");
 
-async function selectArticles() {
-  const { rows } = await db.query(
+async function selectArticles(sort_by = "created_at", order = "DESC") {
+  const allowedOrder = ["DESC", "ASC"];
+  const orderInUpper = order.toUpperCase();
+  if (!allowedOrder.includes(orderInUpper))
+     {
+    throw { status: 400, msg: `Invalid order ${order}` };
+  }
+  const queryStr = format(
     `
     SELECT articles.author,
            title, 
@@ -15,9 +22,12 @@ async function selectArticles() {
       LEFT JOIN comments
         ON articles.article_id = comments.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;
-    `
+    ORDER BY %I %s;
+    `,
+    sort_by,
+    orderInUpper
   );
+  const { rows } = await db.query(queryStr);
   rows.forEach((article) => {
     article.comment_count = Number(article.comment_count);
   });

@@ -10,6 +10,9 @@ const handleDatabaseErrors = (err, req, res, next) => {
     case "23503":
       res.status(404).send({ msg: "Resource Not Found" });
       break;
+    case "42703":
+      res.status(400).send({ msg: "Invalid column name" });
+      break;
     default:
       next(err);
   }
@@ -24,6 +27,7 @@ const handleCustomErrors = (err, req, res, next) => {
 };
 
 const handleServerErrors = (err, req, res, next) => {
+  console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });
 };
 
