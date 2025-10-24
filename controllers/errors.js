@@ -1,4 +1,4 @@
-const handleMissingEndpointError = (req, res) => {
+const handleMissingEndpoint = (req, res) => {
   res.status(404).send({ msg: "Path Not Found" });
 };
 
@@ -32,7 +32,7 @@ const handleServerErrors = (err, req, res, next) => {
 };
 
 module.exports = {
-  handleMissingEndpointError,
+  handleMissingEndpoint,
   handleDatabaseErrors,
   handleCustomErrors,
   handleServerErrors,

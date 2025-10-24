@@ -6,8 +6,8 @@ const {
 const { checkExists } = require("../models/utils.js");
 
 const getArticles = async (req, res) => {
-  const queries = req.query;
-  const promises = [selectArticles(queries)];
+  const { sort_by, order, topic } = req.query;
+  const promises = [selectArticles(sort_by, order, topic)];
   if (topic) {
     promises.push(checkExists("topics", "slug", topic));
   }
