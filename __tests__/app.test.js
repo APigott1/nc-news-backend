@@ -14,8 +14,9 @@ afterAll(async () => {
 
 describe("All: *", () => {
   test("404: responds with an error message when a request is made to an undefined endpoint", async () => {
-    const { body } = await request(app).get("/not-an-endpoint").expect(404);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).get("/not-an-endpoint").expect(404);
 
     expect(msg).toBe("Path Not Found");
   });
@@ -23,8 +24,9 @@ describe("All: *", () => {
 
 describe("GET /api/topics", () => {
   test("200: responds with an object with an array of topics assigned to a key topics", async () => {
-    const { body } = await request(app).get("/api/topics").expect(200);
-    const { topics } = body;
+    const {
+      body: { topics },
+    } = await request(app).get("/api/topics").expect(200);
 
     topics.forEach((topic) => {
       expect(typeof topic.slug).toBe("string");
@@ -36,8 +38,9 @@ describe("GET /api/topics", () => {
 
 describe("GET /api/users", () => {
   test("200: responds with an object with an array of users assigned to a key users", async () => {
-    const { body } = await request(app).get("/api/users").expect(200);
-    const { users } = body;
+    const {
+      body: { users },
+    } = await request(app).get("/api/users").expect(200);
 
     users.forEach((user) => {
       expect(typeof user.username).toBe("string");
@@ -49,8 +52,9 @@ describe("GET /api/users", () => {
 
 describe("GET /api/articles", () => {
   test("200: responds with an object with an array of articles assigned to a key articles", async () => {
-    const { body } = await request(app).get("/api/articles").expect(200);
-    const { articles } = body;
+    const {
+      body: { articles },
+    } = await request(app).get("/api/articles").expect(200);
 
     articles.forEach((article, index, articles) => {
       if (index >= 1) {
@@ -70,10 +74,11 @@ describe("GET /api/articles", () => {
     });
   });
   test("200: responds with an object with an array of articles sorted and ordered by queries", async () => {
-    const { body } = await request(app)
+    const {
+      body: { articles },
+    } = await request(app)
       .get("/api/articles?sort_by=comment_count&order=asc")
       .expect(200);
-    const { articles } = body;
 
     articles.forEach((article, index, articles) => {
       if (index >= 1) {
@@ -94,44 +99,45 @@ describe("GET /api/articles", () => {
     });
   });
   test("200: responds with an object with an array of articles of the queried topic", async () => {
-    const { body } = await request(app)
-      .get("/api/articles?topic=cats")
-      .expect(200);
-    const { articles } = body;
+    const {
+      body: { articles },
+    } = await request(app).get("/api/articles?topic=cats").expect(200);
 
     articles.forEach((article) => {
       expect(article.topic).toBe("cats");
     });
   });
   test("200: responds with an object with an empty array when the topic exists but has no articles", async () => {
-    const { body } = await request(app)
-      .get("/api/articles?topic=paper")
-      .expect(200);
-    const { articles } = body;
+    const {
+      body: { articles },
+    } = await request(app).get("/api/articles?topic=paper").expect(200);
 
     expect(articles).toEqual([]);
   });
   test("400: responds with an error message when the sort_by query isn't a valid column", async () => {
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .get("/api/articles?sort_by=not-a-column&order=asc")
       .expect(400);
-    const { msg } = body;
 
     expect(msg).toBe("Invalid column name");
   });
   test("400: responds with an error message when the order query is neither asc or desc", async () => {
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .get("/api/articles?sort_by=comment_count&order=not-an-order")
       .expect(400);
-    const { msg } = body;
 
     expect(msg).toBe("Invalid order not-an-order");
   });
   test("404: responds with an error message when the topic query is not found", async () => {
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .get("/api/articles?topic=topic-not-in-db")
       .expect(404);
-    const { msg } = body;
 
     expect(msg).toBe("No topic found for slug: topic-not-in-db");
   });
@@ -139,8 +145,9 @@ describe("GET /api/articles", () => {
 
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with an object with an article assigned to a key article", async () => {
-    const { body } = await request(app).get("/api/articles/2").expect(200);
-    const { article } = body;
+    const {
+      body: { article },
+    } = await request(app).get("/api/articles/2").expect(200);
 
     expect(Object.keys(article).length).toBe(9);
     expect(typeof article.author).toBe("string");
@@ -154,16 +161,54 @@ describe("GET /api/articles/:article_id", () => {
     expect(typeof article.comment_count).toBe("number");
   });
   test("400: responds with an error message when a request is made with an invalid article_id", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/not-an-id")
-      .expect(400);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/not-an-id").expect(400);
 
     expect(msg).toBe("Invalid input");
   });
   test("404: responds with an error message when no article is found", async () => {
-    const { body } = await request(app).get("/api/articles/9999").expect(404);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/9999").expect(404);
+
+    expect(msg).toBe("No article found for article_id: 9999");
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: responds with the updated article assigned to a key article", async () => {
+    const votes = { inc_votes: -101 };
+    const {
+      body: { article },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(200);
+
+    expect(Object.keys(article).length).toBe(8);
+    expect(typeof article.author).toBe("string");
+    expect(typeof article.title).toBe("string");
+    expect(article.article_id).toBe(1);
+    expect(typeof article.body).toBe("string");
+    expect(typeof article.topic).toBe("string");
+    expect(typeof article.created_at).toBe("string");
+    expect(article.votes).toBe(-1);
+    expect(typeof article.article_img_url).toBe("string");
+  });
+  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
+    const votes = { inc_votes: 10 };
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/articles/not-an-id")
+      .send(votes)
+      .expect(400);
+
+    expect(msg).toBe("Invalid input");
+  });
+  test("404: responds with an error message when no article is found", async () => {
+    const votes = { inc_votes: 10 };
+    const {
+      body: { msg },
+    } = await request(app).patch("/api/articles/9999").send(votes).expect(404);
 
     expect(msg).toBe("No article found for article_id: 9999");
   });
@@ -171,10 +216,9 @@ describe("GET /api/articles/:article_id", () => {
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: responds with an object with an array of comments assigned to a key comments", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/1/comments")
-      .expect(200);
-    const { comments } = body;
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
 
     comments.forEach((comment, index, comments) => {
       if (index >= 1) {
@@ -192,25 +236,22 @@ describe("GET /api/articles/:article_id/comments", () => {
     });
   });
   test("200: responds with an object with an empty array when the article has no comments", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/2/comments")
-      .expect(200);
-    const { comments } = body;
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/2/comments").expect(200);
     expect(comments).toEqual([]);
   });
   test("400: responds with an error message when a request is made with an invalid article_id", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/not-an-id/comments")
-      .expect(400);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/not-an-id/comments").expect(400);
 
     expect(msg).toBe("Invalid input");
   });
   test("404: responds with an error message when no article is found", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/9999/comments")
-      .expect(404);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/9999/comments").expect(404);
 
     expect(msg).toBe("No article found for article_id: 9999");
   });
@@ -223,11 +264,12 @@ describe("POST /api/articles/:article_id/comments", () => {
       body: "just lurking dw:)",
     };
 
-    const { body } = await request(app)
+    const {
+      body: { comment },
+    } = await request(app)
       .post("/api/articles/2/comments")
       .send(newComment)
       .expect(201);
-    const { comment } = body;
 
     expect(typeof comment.comment_id).toBe("number");
     expect(comment.article_id).toBe(2);
@@ -241,11 +283,12 @@ describe("POST /api/articles/:article_id/comments", () => {
       username: "lurker",
       body: "just lurking dw:)",
     };
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .post("/api/articles/not-an-id/comments")
       .send(newComment)
       .expect(400);
-    const { msg } = body;
 
     expect(msg).toBe("Invalid input");
   });
@@ -254,11 +297,12 @@ describe("POST /api/articles/:article_id/comments", () => {
       username: "username_not_in_db",
       body: "just lurking dw:)",
     };
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .post("/api/articles/2/comments")
       .send(newComment)
       .expect(404);
-    const { msg } = body;
 
     expect(msg).toBe("Resource Not Found");
   });
@@ -267,54 +311,14 @@ describe("POST /api/articles/:article_id/comments", () => {
       username: "lurker",
       body: "just lurking dw:)",
     };
-    const { body } = await request(app)
+    const {
+      body: { msg },
+    } = await request(app)
       .post("/api/articles/9999/comments")
       .send(newComment)
       .expect(404);
-    const { msg } = body;
 
     expect(msg).toBe("Resource Not Found");
-  });
-});
-
-describe("PATCH /api/articles/:article_id", () => {
-  test("200: responds with the updated article assigned to a key article", async () => {
-    const votes = { inc_votes: -101 };
-    const { body } = await request(app)
-      .patch("/api/articles/1")
-      .send(votes)
-      .expect(200);
-    const { article } = body;
-
-    expect(Object.keys(article).length).toBe(8);
-    expect(typeof article.author).toBe("string");
-    expect(typeof article.title).toBe("string");
-    expect(article.article_id).toBe(1);
-    expect(typeof article.body).toBe("string");
-    expect(typeof article.topic).toBe("string");
-    expect(typeof article.created_at).toBe("string");
-    expect(article.votes).toBe(-1);
-    expect(typeof article.article_img_url).toBe("string");
-  });
-  test("400: responds with an error message when a request is made with an invalid article_id", async () => {
-    const votes = { inc_votes: 10 };
-    const { body } = await request(app)
-      .patch("/api/articles/not-an-id")
-      .send(votes)
-      .expect(400);
-    const { msg } = body;
-
-    expect(msg).toBe("Invalid input");
-  });
-  test("404: responds with an error message when no article is found", async () => {
-    const votes = { inc_votes: 10 };
-    const { body } = await request(app)
-      .patch("/api/articles/9999")
-      .send(votes)
-      .expect(404);
-    const { msg } = body;
-
-    expect(msg).toBe("No article found for article_id: 9999");
   });
 });
 
@@ -325,19 +329,17 @@ describe("DELETE /api/comments/:comment_id", () => {
     expect(body).toEqual({});
   });
   test("400: responds with an error message when a request is made with an invalid comment_id", async () => {
-    const { body } = await request(app)
-      .delete("/api/comments/not-an-id")
-      .expect(400);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/not-an-id").expect(400);
 
     expect(msg).toBe("Invalid input");
   });
   test("404: responds with an error message when no comment is found", async () => {
     const votes = { inc_votes: 10 };
-    const { body } = await request(app)
-      .delete("/api/comments/9999")
-      .expect(404);
-    const { msg } = body;
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/9999").expect(404);
 
     expect(msg).toBe("No comment found for comment_id: 9999");
   });

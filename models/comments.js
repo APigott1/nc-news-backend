@@ -22,7 +22,8 @@ async function insertCommentOnArticle(article_id, username, body) {
     `,
     [article_id, body, username]
   );
-  return rows[0];
+  const [comment] = rows;
+  return comment;
 }
 
 async function removeComment(comment_id) {

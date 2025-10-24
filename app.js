@@ -28,13 +28,15 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/users", getUsers);
 
-app.get("/api/articles/:article_id", getArticleFromId);
+app
+  .route("/api/articles/:article_id")
+  .get(getArticleFromId)
+  .patch(patchArticleWithVotesFromId);
 
-app.get("/api/articles/:article_id/comments", getCommentsFromArticle);
-
-app.post("/api/articles/:article_id/comments", postCommentOnArticle);
-
-app.patch("/api/articles/:article_id", patchArticleWithVotesFromId);
+app
+  .route("/api/articles/:article_id/comments")
+  .get(getCommentsFromArticle)
+  .post(postCommentOnArticle);
 
 app.delete("/api/comments/:comment_id", deleteComment);
 
