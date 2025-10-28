@@ -1,0 +1,72 @@
+body {
+  color: lightgray;
+  background: rgb(45, 45, 45);
+  font-family: sans-serif;
+}
+
+a {
+  color: lightgray;
+}
+
+a:visited {
+  color: lightblue;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.contents {
+  flex-grow: 2;
+  position: sticky;
+  top: 0;
+  margin: 50px 100px 50px 20px;
+}
+
+ol {
+  list-style: none;
+}
+
+.endpoint {
+  border-radius: 25px;
+  background: rgb(55, 55, 55);
+  margin: 50px 25% 50px 50px;
+}
+
+table {
+  border: 1px solid;
+  border-collapse: collapse;
+  margin: 30px;
+}
+
+th,
+td {
+  border: 1px solid;
+  padding: 10px;
+}
+
+.response {
+  padding: 0px 10px 15px 10px;
+}
+
+pre {
+  background-color: rgb(75, 75, 75);
+  overflow: auto;
+  font-family: "Monaco", monospace;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 25px;
+}
+
+h3 {
+  font-size: 2.5em;
+  padding: 20px;
+}
+
+h4,
+p,
+ol {
+  padding: 20px;
+}

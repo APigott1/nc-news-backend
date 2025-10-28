@@ -1,10 +1,10 @@
 # About
 
-This project creates and seeds test and development databases with demo news data. A server can be setup to handle several endpoints from which to send data to a client. This project was created with Test Driven Development and the tests are available to be run. A hosted version is available below with a production database.
+This project creates and seeds test and development databases with demo news data. A server can be setup to handle api endpoints from which to send data to a client. This project was created with Test Driven Development and the tests are available to be run. A hosted version is available below with a production database.
 
 # Hosted version  
 
-[nc-news-backend](https://nc-news-backend-sgvu.onrender.com)
+[nc-news-backend](https://nc-news-backend-sgvu.onrender.com/api)
 
 # Getting Started
 ## Prerequisites

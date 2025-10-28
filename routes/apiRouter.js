@@ -1,8 +1,11 @@
+const express = require("express")
 const apiRouter = require("express").Router();
 const topicsRouter = require("./topicsRouter.js");
 const articlesRouter = require("./articlesRouter.js");
 const usersRouter = require("./usersRouter.js");
 const commentsRouter = require("./commentsRouter.js");
+
+apiRouter.use(express.static('public'))
 
 apiRouter.use("/topics", topicsRouter);
 
